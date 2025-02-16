@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hotel-cf
+data:
+  # プロパティーに似たキー。各キーは単純な値にマッピングされている
+  #  MYSQL_DATABASE
+  mysql_database: "hotel_db"
+  # MYSQL_USER
+  mysql_user: "user"
+  # MYSQL_PASSWORD
+  mysql_password: "password"
+  # MYSQL_ROOT_PASSWORD
+  mysql_root_password: "password"

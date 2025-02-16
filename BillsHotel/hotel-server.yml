@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hotel-server-deployment
+  labels:
+    app: hotel-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hotel-server
+  template:
+    metadata:
+      labels:
+        app: hotel-server
+    spec:
+      containers:
+        - name: hotel-server
+          image: 363471485358.dkr.ecr.ap-northeast-1.amazonaws.com/hotelbills/server:latest
+          ports:
+            - containerPort: 50051
+      imagePullSecrets:
+        - name: ecr-secret
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: hotel-server-service
+spec:
+  selector:
+    app: hotel-server
+  ports:
+    - protocol: TCP
+      port: 50051
+      targetPort: 50051
+

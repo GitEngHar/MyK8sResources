@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hotel-reserve-client-deployment
+  labels:
+    app: hotel-reserve-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hotel-reserve-client
+  template:
+    metadata:
+      labels:
+        app: hotel-reserve-client
+    spec:
+      containers:
+        - name: hotel-reserve-client
+          image: 363471485358.dkr.ecr.ap-northeast-1.amazonaws.com/hotelbills/reserve-client:latest
+          ports:
+            - containerPort: 50052
+          env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/secrets/key.json"
+          volumeMounts:
+            - name: gcp-secret
+              mountPath: "/secrets"
+              readOnly: true
+      volumes:
+        - name: gcp-secret
+          secret:
+            secretName: gcp-key
+      imagePullSecrets:
+        - name: ecr-secret
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: hotel-reserve-client-service
+spec:
+  selector:
+    app: hotel-reserve-client
+  ports:
+    - protocol: TCP
+      port: 50052
+      targetPort: 50052
+

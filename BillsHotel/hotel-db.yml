@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hotel-db-deployment
+  labels:
+    app: hotel-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hotel-db
+  template:
+    metadata:
+      labels:
+        app: hotel-db
+    spec:
+      containers:
+        - name: hotel-db
+          image: mysql
+          ports:
+            - containerPort: 3306
+          env:
+            # 環境変数を定義します。
+            - name: MYSQL_DATABASE # ここではConfigMap内のキーの名前とは違い大文字
+              # 大文字が使われていることに着目してください。
+              valueFrom:
+                configMapKeyRef:
+                  name: hotel-cf           # この値を取得するConfigMap。
+                  key: mysql_database # 取得するキー。
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: hotel-cf
+                  key: mysql_user
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: hotel-cf
+                  key: mysql_password
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: hotel-cf
+                  key: mysql_root_password
+          volumeMounts:
+            - name: init-sql
+              mountPath: "/docker-entrypoint-initdb.d/init.sql"
+              subPath: init.sql
+              readOnly: true
+      volumes:
+        - name: init-sql
+          configMap:
+            name: hotel-init-sql-cf
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: hotel-db
+spec:
+  selector:
+    app: hotel-db
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
