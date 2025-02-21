@@ -8,9 +8,25 @@ data:
     const BASE_URL = process.env.SVC_DOMAIN;
     const VUS = __ENV.TEST_VUS || 10;
     export let options = {
-        vus: 5,
+        vus: VUS,
         duration: '10s'
     };
     export default function(){
         http.get(`${BASE_URL}/`);
     }
+
+---
+apiVersion: k6.io/v1alpha1
+kind: TestRun
+metadata:
+  name: k6-sample
+spec:
+  parallelism: 5
+  script:
+    configMap:
+      name: stress-js-cm
+      file: test.js
+  runner:
+    env:
+      - name: TEST_VUS
+        value: "5"

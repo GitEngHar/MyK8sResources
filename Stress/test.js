@@ -1,7 +1,8 @@
 import http from "k6/http";
-const BASE_URL = "http://stress-app-service:8080";
+const BASE_URL = process.env.SVC_DOMAIN;
+const VUS = __ENV.TEST_VUS || 10;
 export let options = {
-    vus: 5,
+    vus: VUS,
     duration: '10s'
 };
 export default function(){
