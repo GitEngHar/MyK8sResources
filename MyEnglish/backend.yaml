@@ -42,6 +42,16 @@ spec:
                 configMapKeyRef:
                   name: myenglish-cf
                   key: myenglish_redis_dsn
+            - name: G_AUTH_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: google-access
+                  key: g_auth_client_id
+            - name: G_AUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: google-access
+                  key: g_auth_secret
       imagePullSecrets:
         - name: regcred
 

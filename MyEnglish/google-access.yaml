@@ -3,7 +3,8 @@ kind: Secret
 metadata:
   name: google-access
   namespace: myenglish
+## type: opaque > command public
 type: Opaque
 data:
-  username: YWRtaW4=
-  password: MWYyZDFlMmU2N2Rm
+  g_auth_client_id: YWRtaW4=
+  g_auth_secret: MWYyZDFlMmU2N2Rm
