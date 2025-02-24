@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myenglish-redis-deployment
+  namespace: myenglish
+  labels:
+    app: myenglish-redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myenglish-redis
+  template:
+    metadata:
+      labels:
+        app: myenglish-redis
+    spec:
+      containers:
+        - name: myenglish-redis
+          image: redis:7.2.4-alpine
+          ports:
+            - containerPort: 6379
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: myenglish-redis
+  namespace: myenglish
+spec:
+  selector:
+    app: myenglish-redis
+  ports:
+    - protocol: TCP
+      port: 6800
+      targetPort: 6379

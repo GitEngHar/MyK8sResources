@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myenglish-cf
+  namespace: myenglish
+data:
+  # プロパティーに似たキー。各キーは単純な値にマッピングされている
+  # 接続先
+  myenglish_db_dsn: "jdbc:mysql://myenglish-db-service:3306/myenglishdb"
+  myenglish_redis_dsn : "myenglish-redis"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myenglish-server-deployment
+  namespace: myenglish
+  labels:
+    app: myenglish-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myenglish-server
+  template:
+    metadata:
+      labels:
+        app: myenglish-server
+    spec:
+      containers:
+        - name: myenglish-server
+          image: haruapp/myenglish-server:arm6
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MYENGLISH_DB_DSN
+              valueFrom:
+                configMapKeyRef:
+                  name: myenglish-cf
+                  key: myenglish_db_dsn
+            - name: MYENGLISH_REDIS_DSN
+              valueFrom:
+                configMapKeyRef:
+                  name: myenglish-cf
+                  key: myenglish_redis_dsn
+      imagePullSecrets:
+        - name: regcred
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: myenglish-server-service
+  namespace: myenglish
+spec:
+  selector:
+    app: myenglish-server
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+

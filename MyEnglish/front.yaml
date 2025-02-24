@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myenglish-front-deployment
+  namespace: myenglish
+  labels:
+    app: myenglish-front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myenglish-front
+  template:
+    metadata:
+      labels:
+        app: myenglish-front
+    spec:
+      containers:
+        - name: myenglish-front
+          image: haruapp/myenglish-front:latest
+          ports:
+            - containerPort: 80
+      imagePullSecrets:
+        - name: regcred
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: myenglish-front-service
+  namespace: myenglish
+spec:
+  selector:
+    app: myenglish-front
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
