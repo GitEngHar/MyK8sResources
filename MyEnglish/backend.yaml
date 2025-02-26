@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: myenglish-server
-          image: haruapp/myenglish-server:arm6
+          image: haruapp/myenglish-server:v1
           ports:
             - containerPort: 8080
           env:
