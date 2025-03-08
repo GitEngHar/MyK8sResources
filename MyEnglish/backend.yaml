@@ -52,6 +52,11 @@ spec:
                 secretKeyRef:
                   name: google-access
                   key: g_auth_secret
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: jwt_secret_key
       imagePullSecrets:
         - name: regcred
 
