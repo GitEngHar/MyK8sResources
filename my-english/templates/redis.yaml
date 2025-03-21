@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: myenglish-redis-deployment
-  namespace: myenglish
+  namespace: {{.Values.namespace}}
   labels:
     app: myenglish-redis
 spec:
@@ -26,7 +26,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: myenglish-redis
-  namespace: myenglish
+  namespace: {{.Values.namespace}}
 spec:
   selector:
     app: myenglish-redis

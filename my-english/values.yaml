@@ -1,0 +1,23 @@
+replicas: 1
+namespace: myenglish
+
+image:
+  registry: "haruapp"
+  backend:
+    repository: "myenglish-server"
+    version: "v1"
+  frontend:
+    repository: "myenglish-front"
+    version: "v1.6"
+
+config:
+  server:
+    myenglish_db_dsn: "jdbc:mysql://myenglish-db-service:3306/myenglishdb"
+    myenglish_redis_dsn: "myenglish-redis"
+  db:
+    mysql_database: "myenglishdb"
+    mysql_user: "user"
+    mysql_password: "password"
+    mysql_root_password: "Password1"
+
+
