@@ -2,24 +2,24 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: myenglish-db-cf
-  namespace: myenglish
+  namespace: {{.Values.namespace}}
 data:
   # プロパティーに似たキー。各キーは単純な値にマッピングされている
   #  MYSQL_DATABASE
-  mysql_database: "myenglishdb"
+  mysql_database: "{{ .Values.config.db.mysql_database }}"
   # MYSQL_USER
-  mysql_user: "user"
+  mysql_user: "{{ .Values.config.db.mysql_user }}"
   # MYSQL_PASSWORD
-  mysql_password: "password"
+  mysql_password: "{{ .Values.config.db.mysql_password }}"
   # MYSQL_ROOT_PASSWORD
-  mysql_root_password: "Password1"
+  mysql_root_password: "{{ .Values.config.db.mysql_root_password }}"
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: myenglish-db-deployment
-  namespace: myenglish
+  namespace: {{.Values.namespace}}
   labels:
     app: myenglish-db
 spec:
@@ -66,7 +66,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: myenglish-db-service
-  namespace: myenglish
+  namespace: {{.Values.namespace}}
 spec:
   selector:
     app: myenglish-db

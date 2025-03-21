@@ -2,18 +2,18 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: myenglish-cf
-  namespace: myenglish
+  namespace: {{ .Values.namespace }}
 data:
   # プロパティーに似たキー。各キーは単純な値にマッピングされている
   # 接続先
-  myenglish_db_dsn: "jdbc:mysql://myenglish-db-service:3306/myenglishdb"
-  myenglish_redis_dsn : "myenglish-redis"
+  myenglish_db_dsn: "{{ .Values.config.server.myenglish_db_dsn }}"
+  myenglish_redis_dsn : "{{ .Values.config.server.myenglish_redis_dsn }}"
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: myenglish-server-deployment
-  namespace: myenglish
+  namespace: {{ .Values.namespace }}
   labels:
     app: myenglish-server
 spec:
@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: myenglish-server
-          image: haruapp/myenglish-server:v1
+          image: "{{ .Values.image.registry }}/{{ .Values.image.backend.repository }}:{{ .Values.image.backend.version }}"
           ports:
             - containerPort: 8080
           env:
@@ -66,7 +66,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: myenglish-server-service
-  namespace: myenglish
+  namespace: {{ .Values.namespace }}
 spec:
   selector:
     app: myenglish-server
