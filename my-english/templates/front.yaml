@@ -1,8 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myenglish-front-cf
+  namespace: {{ .Release.Namespace }}
+data:
+  # プロパティーに似たキー。各キーは単純な値にマッピングされている
+  # 接続先
+  server_domain_quizrest : "{{ .Values.config.front.server_domain_quizrest }}"
+  server_domain_quizdetailrest : "{{ .Values.config.front.server_domain_quizdetailrest }}"
+  server_domain_takequizrest : "{{ .Values.config.front.server_domain_takequizrest }}"
+  server_domain_login_confirm : "{{ .Values.config.front.server_domain_login_confirm }}"
+  server_domain_login : "{{ .Values.config.front.server_domain_login }}"
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: myenglish-front-deployment
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
   labels:
     app: myenglish-front
 spec:
@@ -20,6 +35,32 @@ spec:
           image: "{{ .Values.image.registry }}/{{ .Values.image.frontend.repository }}:{{ .Values.image.frontend.version }}"
           ports:
             - containerPort: 80
+          env:
+            - name: SERVER_DOMAIN_QUIZREST
+              valueFrom:
+                configMapKeyRef:
+                  name: myenglish-front-cf
+                  key: server_domain_quizrest
+            - name: SERVER_DOMAIN_QUIZDETAILREST
+              valueFrom:
+                configMapKeyRef:
+                  name: myenglish-front-cf
+                  key: server_domain_quizdetailrest
+            - name: SERVER_DOMAIN_TAKEQUIZREST
+              valueFrom:
+                configMapKeyRef:
+                  name: myenglish-front-cf
+                  key: server_domain_takequizrest
+            - name: SERVER_DOMAIN_LOGIN_CONFIRM
+              valueFrom:
+                configMapKeyRef:
+                  name: myenglish-front-cf
+                  key: server_domain_login_confirm
+            - name: SERVER_DOMAIN_LOGIN
+              valueFrom:
+                configMapKeyRef:
+                  name: myenglish-front-cf
+                  key: server_domain_login
       imagePullSecrets:
         - name: regcred
 
@@ -29,7 +70,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: myenglish-front-service
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
 spec:
   selector:
     app: myenglish-front

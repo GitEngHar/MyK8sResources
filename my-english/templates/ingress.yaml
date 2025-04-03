@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myenglish-ingress
+  namespace: {{ .Release.Namespace }}
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - my-english.com
+      secretName: root-secret
+  rules:
+    - host: my-english.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: myenglish-server-service
+                port:
+                  number: 8080
+          - path: /web
+            pathType: Prefix
+            backend:
+              service:
+                name: myenglish-front-service
+                port:
+                  number: 80
