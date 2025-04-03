@@ -2,18 +2,19 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: myenglish-cf
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
 data:
   # プロパティーに似たキー。各キーは単純な値にマッピングされている
   # 接続先
   myenglish_db_dsn: "{{ .Values.config.server.myenglish_db_dsn }}"
   myenglish_redis_dsn : "{{ .Values.config.server.myenglish_redis_dsn }}"
+  front_path : "{{ .Values.config.server.front_path }}"
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: myenglish-server-deployment
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
   labels:
     app: myenglish-server
 spec:
@@ -42,6 +43,11 @@ spec:
                 configMapKeyRef:
                   name: myenglish-cf
                   key: myenglish_redis_dsn
+            - name: FRONT_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: myenglish-cf
+                  key: front_path
             - name: G_AUTH_CLIENT_ID
               valueFrom:
                 secretKeyRef:
@@ -66,7 +72,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: myenglish-server-service
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
 spec:
   selector:
     app: myenglish-server
