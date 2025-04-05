@@ -25,3 +25,4 @@ spec:
     group: cert-manager.io
   dnsNames:
     - my-english.com
+    - my-english-api.com
