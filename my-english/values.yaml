@@ -1,6 +1,5 @@
 replicas: 1
 namespace: myenglish
-
 image:
   registry: "haruapp"
   backend:
@@ -8,19 +7,12 @@ image:
     version: "latest"
   frontend:
     repository: "myenglish-front"
-    version: "v1.7.2"
-
+    version: "v1.7.4"
 config:
   server:
     myenglish_db_dsn: "jdbc:mysql://myenglish-db-service:3306/myenglishdb"
     myenglish_redis_dsn: "myenglish-redis"
-    front_path: "https://my-english.com/web"
-  front:
-    server_domain_quizrest : "http://my-english.com/api/quizrest"
-    server_domain_quizdetailrest: "http://my-english.com/api/quizdetailrest"
-    server_domain_takequizrest: "http://my-english.com/api/takequizrest/"
-    server_domain_login_confirm: "http://my-english.com/api/confirm"
-    server_domain_login: "http://my-english.com/api/login"
+    front_path: "https://my-english.com/"
   db:
     mysql_database: "myenglishdb"
     mysql_user: "user"

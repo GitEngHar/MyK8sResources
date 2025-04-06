@@ -3,6 +3,8 @@ kind: Ingress
 metadata:
   name: myenglish-ingress
   namespace: {{ .Release.Namespace }}
+  annotations:
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
 spec:
   ingressClassName: nginx
   tls:
@@ -13,7 +15,7 @@ spec:
     - host: my-english.com
       http:
         paths:
-          - path: /
+          - path: /login
             pathType: Prefix
             backend:
               service:
@@ -21,6 +23,20 @@ spec:
                 port:
                   number: 8080
           - path: /web
+            pathType: Prefix
+            backend:
+              service:
+                name: myenglish-server-service
+                port:
+                  number: 8080
+          - path: /oauth2/authorization/google
+            pathType: Prefix
+            backend:
+              service:
+                name: myenglish-server-service
+                port:
+                  number: 8080
+          - path: /
             pathType: Prefix
             backend:
               service:
